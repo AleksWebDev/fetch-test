@@ -1,0 +1,9 @@
+{
+    "persons": [
+        {
+            "userName" : "Aleksandr Lavrov",
+            "email": "lavrovfp@gmail.com",
+            "phone": "+8928098123"
+        }
+    ]   
+}
