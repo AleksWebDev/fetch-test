@@ -3,13 +3,10 @@ const form = document.querySelector('.form');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const res = validateForm();
-    console.log(`res ${res}`);
-    /* if(res){
-        e.preventDefault();
-        return
-    }
 
-    postData(res); */
+    if(res.length === 3){
+        postData(res);
+    }
 })
 
 const validateForm = () => {
@@ -26,13 +23,19 @@ const validateForm = () => {
     Array.from(inputs).forEach((item) => {
         if(item.className === 'name'){
             const name = checkInputName(item, item.value, regExp.name);
-            userData.push(name);
+            if(name !== undefined){
+                userData.push(name);
+            }
         }else if(item.className === 'email'){
             const email = checkInputEmail(item, item.value, regExp.email);
-            userData.push(email);
+            if(email !== undefined){
+                userData.push(email);
+            }
         }else if(item.className === 'phone'){
             const phone = checkInputPhone(item, item.value, regExp.phone);
-            userData.push(phone);
+            if(phone !== undefined){
+                userData.push(phone);
+            }
         }
     })
 
@@ -48,6 +51,7 @@ function checkInputName(item, value, name){
         console.log('fucked up');
         errorMessage.classList.add('show-error');
         errorMessage.innerText = 'Введите корректное имя пользователя!!!';
+        return;
     }else{
         console.log('validate succeccfully');
         errorMessage.classList.remove('show-error');
@@ -64,6 +68,7 @@ function checkInputEmail(item, value, email){
         console.log('fucked up');
         errorMessage.classList.add('show-error');
         errorMessage.innerText = 'Введите корректный email адресс!!!';
+        return;
     }else{
         console.log('validate succeccfully');
         errorMessage.classList.remove('show-error');
@@ -80,6 +85,7 @@ function checkInputPhone(item, value, phone){
         console.log('fucked up');
         errorMessage.classList.add('show-error');
         errorMessage.innerText = 'Введите корректный номер телефона!!!';
+        return;
     }else{
         console.log('validate succeccfully');
         errorMessage.classList.remove('show-error');
@@ -90,21 +96,41 @@ function checkInputPhone(item, value, phone){
 
 
 
-function postData(data){
+async function postData(data){
     const [name, email, phone] = data;
-
-    fetch('http://localhost:3000/persons', {
+    
+    try{
+        const response = await fetch('http://localhost:3000/persons', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             name: name,
             email: email,
             phone: phone,
-            id: generateID()
-        }),
+            id: generateID(),
+        })
     })
+    if(response.ok) {
+        console.log('Data succeccesfully posted to server')
+        const data = await response.json();
+    }else{
+        throw new Error('Ошибка запроса')
+    }
+    }catch(error){
+        console.log('Failed to post data', error.message)
+    }
+
+    function generateID(){
+        return Math.floor(Math.random() * (1000000 - 1) + 1);
+    }
 }
 
-function generateID(){
-    return Math.floor(Math.random() * (10000 - 1) + 1);
-}
+
+
+
+
+
+
+
+
+
