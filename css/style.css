@@ -47,3 +47,14 @@ form input {
     border: none;
     border-radius: 5px;
 }
+
+
+.hide-error{
+    display: none;
+}
+
+.show-error{
+    display: block;
+    margin-top: 5px;
+    color: red;
+}
