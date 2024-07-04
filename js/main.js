@@ -3,13 +3,13 @@ const form = document.querySelector('.form');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const res = validateForm();
-
-    if(res === undefined && !Array.isArray(res) && res.length !== 3){
-        console.log('error: failed to merge data')
-        return;
+    console.log(`res ${res}`);
+    /* if(res){
+        e.preventDefault();
+        return
     }
 
-    postData(res);
+    postData(res); */
 })
 
 const validateForm = () => {
@@ -91,9 +91,20 @@ function checkInputPhone(item, value, phone){
 
 
 function postData(data){
+    const [name, email, phone] = data;
+
     fetch('http://localhost:3000/persons', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            phone: phone,
+            id: generateID()
+        }),
     })
+}
+
+function generateID(){
+    return Math.floor(Math.random() * (10000 - 1) + 1);
 }
